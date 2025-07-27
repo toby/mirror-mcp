@@ -87,4 +87,49 @@ describe('ReflectionEngine', () => {
     expect(result.reflection).toContain('question');
     expect(result.tokensUsed).toBeGreaterThan(0);
   });
+
+  test('should handle system prompt', async () => {
+    const request = {
+      question: 'What are my strengths?',
+      system_prompt: 'You are an expert coach helping with self-assessment.',
+    };
+
+    const result = await reflectionEngine.reflect(request, mockServer as any);
+
+    expect(result).toBeDefined();
+    expect(result.reflection).toContain('strengths');
+    expect(result.reflection).toContain('guidance');
+    expect(result.tokensUsed).toBeGreaterThan(0);
+  });
+
+  test('should handle user prompt', async () => {
+    const request = {
+      question: 'How can I improve?',
+      user_prompt: 'Focus on technical skills and provide specific actionable advice.',
+    };
+
+    const result = await reflectionEngine.reflect(request, mockServer as any);
+
+    expect(result).toBeDefined();
+    expect(result.reflection).toContain('improve');
+    expect(result.reflection).toContain('instructions');
+    expect(result.tokensUsed).toBeGreaterThan(0);
+  });
+
+  test('should handle both system and user prompts', async () => {
+    const request = {
+      question: 'What is my confidence level?',
+      system_prompt: 'You are a professional mentor providing guidance.',
+      user_prompt: 'Analyze confidence levels and provide detailed feedback.',
+      context: 'Recent project completion with positive feedback',
+    };
+
+    const result = await reflectionEngine.reflect(request, mockServer as any);
+
+    expect(result).toBeDefined();
+    expect(result.reflection).toContain('confidence');
+    expect(result.reflection).toContain('guidance');
+    expect(result.reflection).toContain('instructions');
+    expect(result.tokensUsed).toBeGreaterThan(0);
+  });
 });

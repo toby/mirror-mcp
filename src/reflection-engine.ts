@@ -4,6 +4,8 @@ import { CreateMessageRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 export interface ReflectionRequest {
   question: string;
   context?: string;
+  system_prompt?: string;
+  user_prompt?: string;
   max_tokens?: number;
   temperature?: number;
 }
@@ -18,6 +20,8 @@ export class ReflectionEngine {
     const {
       question,
       context = '',
+      system_prompt,
+      user_prompt,
       max_tokens = 500,
       temperature = 0.8,
     } = request;
@@ -35,24 +39,16 @@ export class ReflectionEngine {
       throw new Error('temperature must be between 0 and 2');
     }
 
-    // Construct the reflection prompt
-    const prompt = this.buildReflectionPrompt(question, context);
-
     try {
+      // Build messages for MCP sampling
+      const messages = this.buildReflectionMessages(question, context, system_prompt, user_prompt);
+
       // Use MCP sampling to generate the reflection
       const samplingResponse = await server.request(
         {
           method: 'sampling/createMessage',
           params: {
-            messages: [
-              {
-                role: 'user',
-                content: {
-                  type: 'text',
-                  text: prompt,
-                },
-              },
-            ],
+            messages,
             maxTokens: max_tokens,
             temperature: temperature,
             metadata: {
@@ -74,8 +70,41 @@ export class ReflectionEngine {
     } catch (error) {
       // Fallback to a structured self-reflection if sampling fails
       console.error('MCP sampling failed, using fallback reflection:', error);
-      return this.generateFallbackReflection(question, context);
+      return this.generateFallbackReflection(question, context, system_prompt, user_prompt);
     }
+  }
+
+  private buildReflectionMessages(question: string, context?: string, system_prompt?: string, user_prompt?: string): any[] {
+    const messages: any[] = [];
+
+    // Add system message if provided
+    if (system_prompt) {
+      messages.push({
+        role: 'system',
+        content: {
+          type: 'text',
+          text: system_prompt,
+        },
+      });
+    }
+
+    // Build user message - use custom user_prompt if provided, otherwise build default
+    let userMessage: string;
+    if (user_prompt) {
+      userMessage = user_prompt;
+    } else {
+      userMessage = this.buildReflectionPrompt(question, context);
+    }
+
+    messages.push({
+      role: 'user',
+      content: {
+        type: 'text',
+        text: userMessage,
+      },
+    });
+
+    return messages;
   }
 
   private buildReflectionPrompt(question: string, context?: string): string {
@@ -125,18 +154,27 @@ export class ReflectionEngine {
     return Math.ceil(text.length / 4);
   }
 
-  private generateFallbackReflection(question: string, context?: string): ReflectionResult {
+  private generateFallbackReflection(question: string, context?: string, system_prompt?: string, user_prompt?: string): ReflectionResult {
     let reflection = `Reflecting on the question: "${question}"\n\n`;
+    
+    if (system_prompt) {
+      reflection += `With the guidance: ${system_prompt}\n\n`;
+    }
     
     if (context) {
       reflection += `Given the provided context, `;
     }
     
-    reflection += `I should approach this through systematic self-examination. `;
-    reflection += `This question prompts me to consider my reasoning processes, `;
-    reflection += `potential biases, and the confidence levels in my analysis. `;
-    reflection += `I should evaluate both what I know and what I'm uncertain about, `;
-    reflection += `while considering alternative perspectives that might challenge my initial thinking.`;
+    if (user_prompt) {
+      reflection += `Following the specific instructions: ${user_prompt}\n\n`;
+      reflection += `I should approach this reflection accordingly. `;
+    } else {
+      reflection += `I should approach this through systematic self-examination. `;
+      reflection += `This question prompts me to consider my reasoning processes, `;
+      reflection += `potential biases, and the confidence levels in my analysis. `;
+      reflection += `I should evaluate both what I know and what I'm uncertain about, `;
+      reflection += `while considering alternative perspectives that might challenge my initial thinking.`;
+    }
 
     return {
       reflection,
