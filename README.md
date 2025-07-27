@@ -60,16 +60,26 @@ Add the server to your MCP client configuration:
 
 ### Using the Reflect Tool
 
-Once configured, the LLM can use the `reflect` tool:
+Once configured, the LLM can use the `reflect` tool for basic self-reflection:
 
 ```
 reflect: "What are the potential weaknesses in my reasoning about quantum computing?"
 ```
 
+For more directed reflection, custom prompts can be used:
+
+```
+reflect: {
+  "question": "How can I improve my problem-solving approach?",
+  "system_prompt": "You are a strategic thinking mentor focused on systematic improvement",
+  "user_prompt": "Provide 3 specific actionable recommendations with examples"
+}
+```
+
 The tool will:
-1. Accept the self-directed question
-2. Use MCP sampling to generate a response
-3. Return the reflection back to the requesting model
+1. Accept the self-directed question and optional custom prompts
+2. Use MCP sampling to generate a response (with system/user prompts if provided)
+3. Return the tailored reflection back to the requesting model
 
 ### Advanced Configuration
 
@@ -94,11 +104,18 @@ The tool will:
 
 #### `reflect`
 
-Enables the LLM to ask itself a question and receive a response through MCP sampling.
+Enables the LLM to ask itself a question and receive a response through MCP sampling. The tool supports custom system and user prompts to help the LLM self-direct what kind of response it gets.
+
+**Self-Direction with Custom Prompts:**
+- **System Prompt**: Define the role or perspective for the reflection (e.g., "expert coach", "critical thinker", "creative problem solver")
+- **User Prompt**: Specify the format, structure, or focus of the reflection response
+- **Default Behavior**: When no custom prompts are provided, uses built-in reflection guidance focused on strengths, weaknesses, assumptions, and alternative perspectives
 
 **Parameters:**
 - `question` (string, required): The question the LLM wants to ask itself
 - `context` (string, optional): Additional context for the reflection
+- `system_prompt` (string, optional): Custom system prompt to direct the reflection approach
+- `user_prompt` (string, optional): Custom user prompt to replace the default reflection instructions
 - `max_tokens` (number, optional): Maximum tokens for the response (default: 500)
 - `temperature` (number, optional): Sampling temperature (default: 0.8)
 
@@ -111,6 +128,21 @@ Enables the LLM to ask itself a question and receive a response through MCP samp
     "context": "Previous analysis showed a 23% increase in user engagement",
     "max_tokens": 300,
     "temperature": 0.6
+  }
+}
+```
+
+**Example with custom prompts:**
+```json
+{
+  "name": "reflect",
+  "arguments": {
+    "question": "What are the potential weaknesses in my reasoning?",
+    "system_prompt": "You are an expert critical thinking coach helping to identify logical fallacies and reasoning gaps.",
+    "user_prompt": "Analyze my reasoning step-by-step and provide specific examples of potential weaknesses or blind spots.",
+    "context": "Working on a complex machine learning model evaluation",
+    "max_tokens": 400,
+    "temperature": 0.7
   }
 }
 ```

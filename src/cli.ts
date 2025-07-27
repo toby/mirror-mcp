@@ -41,6 +41,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: 'string',
               description: 'Additional context for the reflection',
             },
+            system_prompt: {
+              type: 'string',
+              description: 'Custom system prompt to direct the reflection approach',
+            },
+            user_prompt: {
+              type: 'string',
+              description: 'Custom user prompt to replace the default reflection instructions',
+            },
             max_tokens: {
               type: 'number',
               description: 'Maximum tokens for the response',
