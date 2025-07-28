@@ -19,6 +19,17 @@ A Model Context Protocol (MCP) server that provides a `reflect` tool, enabling L
 
 ## Installation
 
+### Quick Install for VS Code
+
+<div align="center">
+  <a href="#vs-code-setup">
+    <img src="https://img.shields.io/badge/Install%20for-VS%20Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Install for VS Code"/>
+  </a>
+  <a href="#vs-code-insiders-setup">
+    <img src="https://img.shields.io/badge/Install%20for-VS%20Code%20Insiders-1F9AC2?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Install for VS Code Insiders"/>
+  </a>
+</div>
+
 ### Via npm
 
 ```bash
@@ -41,7 +52,63 @@ npm run build
 npm start
 ```
 
+### VS Code Setup
+
+To use mirror-mcp with GitHub Copilot in VS Code:
+
+1. First install mirror-mcp globally:
+   ```bash
+   npm install -g mirror-mcp
+   ```
+
+2. Add to your VS Code settings (`.vscode/settings.json` or user settings):
+   ```json
+   {
+     "github.copilot.chat.modelContextProtocol.servers": {
+       "mirror": {
+         "command": "mirror-mcp"
+       }
+     }
+   }
+   ```
+
+3. Restart VS Code and start using the reflect tool in Copilot Chat!
+
+### VS Code Insiders Setup
+
+To use mirror-mcp with GitHub Copilot in VS Code Insiders:
+
+1. First install mirror-mcp globally:
+   ```bash
+   npm install -g mirror-mcp
+   ```
+
+2. Add to your VS Code Insiders settings (`.vscode/settings.json` or user settings):
+   ```json
+   {
+     "github.copilot.chat.modelContextProtocol.servers": {
+       "mirror": {
+         "command": "mirror-mcp"
+       }
+     }
+   }
+   ```
+
+3. Restart VS Code Insiders and start using the reflect tool in Copilot Chat!
+
 ## Usage
+
+### Using with VS Code Copilot
+
+Once you've configured mirror-mcp with VS Code (see [installation](#vs-code-setup)), you can use the reflect tool directly in Copilot Chat:
+
+```
+@workspace /reflect "What are the potential weaknesses in my reasoning about this React component?"
+```
+
+```
+@workspace /reflect "How confident am I in my approach to handling this async operation?"
+```
 
 ### Basic Configuration
 
