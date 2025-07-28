@@ -23,6 +23,18 @@ A Model Context Protocol (MCP) server that provides a `reflect` tool, enabling L
 
 [![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Server-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=mirror&config=%7B%22type%22%3A%20%22stdio%22%2C%20%22command%22%3A%20%22npx%22%2C%20%22args%22%3A%20%5B%22mirror-mcp%40latest%22%5D%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Server-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=mirror&config=%7B%22type%22%3A%20%22stdio%22%2C%20%22command%22%3A%20%22npx%22%2C%20%22args%22%3A%20%5B%22mirror-mcp%40latest%22%5D%7D&quality=insiders)
 
+### MCP Host Configuration
+
+For other MCP-compatible clients, add the following configuration:
+
+```json
+{
+  "type": "stdio",
+  "command": "npx", 
+  "args": ["mirror-mcp@latest"]
+}
+```
+
 ### Via npm
 
 ```bash
@@ -45,55 +57,14 @@ npm run build
 npm start
 ```
 
-### VS Code Setup
 
-To use mirror-mcp with GitHub Copilot in VS Code:
 
-1. First install mirror-mcp globally:
-   ```bash
-   npm install -g mirror-mcp
-   ```
-
-2. Add to your VS Code settings (`.vscode/settings.json` or user settings):
-   ```json
-   {
-     "github.copilot.chat.modelContextProtocol.servers": {
-       "mirror": {
-         "command": "mirror-mcp"
-       }
-     }
-   }
-   ```
-
-3. Restart VS Code and start using the reflect tool in Copilot Chat!
-
-### VS Code Insiders Setup
-
-To use mirror-mcp with GitHub Copilot in VS Code Insiders:
-
-1. First install mirror-mcp globally:
-   ```bash
-   npm install -g mirror-mcp
-   ```
-
-2. Add to your VS Code Insiders settings (`.vscode/settings.json` or user settings):
-   ```json
-   {
-     "github.copilot.chat.modelContextProtocol.servers": {
-       "mirror": {
-         "command": "mirror-mcp"
-       }
-     }
-   }
-   ```
-
-3. Restart VS Code Insiders and start using the reflect tool in Copilot Chat!
 
 ## Usage
 
 ### Using with VS Code Copilot
 
-Once you've configured mirror-mcp with VS Code (see [installation](#vs-code-setup)), you can use the reflect tool directly in Copilot Chat:
+Once you've configured mirror-mcp with VS Code using the install badges above, you can use the reflect tool directly in Copilot Chat:
 
 ```
 @workspace /reflect "What are the potential weaknesses in my reasoning about this React component?"
