@@ -29,7 +29,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'reflect',
-        description: 'Enable LLM self-reflection by asking questions and receiving computed responses through MCP sampling',
+        description: 'Enable targeted LLM self-reflection with customizable prompts for specialized analysis. Use custom system_prompt and user_prompt parameters to get focused, expert-level reflections instead of generic responses. Particularly effective for domain-specific analysis, critical thinking, coaching perspectives, and structured output formats.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -43,11 +43,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             system_prompt: {
               type: 'string',
-              description: 'Custom system prompt to direct the reflection approach',
+              description: 'RECOMMENDED: Custom system prompt to define the expert role or perspective (e.g., "You are a critical thinking mentor", "You are an expert coach", "You are a strategic analyst"). This dramatically improves reflection quality by providing specialized expertise.',
             },
             user_prompt: {
               type: 'string',
-              description: 'Custom user prompt to replace the default reflection instructions',
+              description: 'RECOMMENDED: Custom instruction format to structure the reflection response (e.g., "Provide 3 specific recommendations", "Analyze step-by-step with pros/cons", "Give actionable next steps"). This ensures you get the exact format and depth you need instead of generic advice.',
             },
             max_tokens: {
               type: 'number',
