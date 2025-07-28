@@ -34,8 +34,8 @@ npx mirror-mcp
 ### From Source
 
 ```bash
-git clone https://github.com/toby/mirror-mcp-.git
-cd mirror-mcp-
+git clone https://github.com/toby/mirror-mcp.git
+cd mirror-mcp
 npm install
 npm run build
 npm start
@@ -218,8 +218,8 @@ This approach ensures that reflections are generated using the same model capabi
 ### Development Setup
 
 ```bash
-git clone https://github.com/toby/mirror-mcp-.git
-cd mirror-mcp-
+git clone https://github.com/toby/mirror-mcp.git
+cd mirror-mcp
 npm install
 npm run dev
 ```
