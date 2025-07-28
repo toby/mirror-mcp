@@ -86,23 +86,16 @@ export class ReflectionEngine {
   private buildReflectionMessages(question: string, context?: string, system_prompt?: string, user_prompt?: string): any[] {
     const messages: any[] = [];
 
-    // Add system message if provided
-    if (system_prompt) {
-      messages.push({
-        role: 'system',
-        content: {
-          type: 'text',
-          text: system_prompt,
-        },
-      });
-    }
-
-    // Build user message - use custom user_prompt if provided, otherwise build default
+    // Build user message - incorporate system_prompt into user message since MCP sampling only accepts 'user' and 'assistant' roles
     let userMessage: string;
     if (user_prompt) {
       userMessage = user_prompt;
+      // Prepend system prompt if provided
+      if (system_prompt) {
+        userMessage = `${system_prompt}\n\n${userMessage}`;
+      }
     } else {
-      userMessage = this.buildReflectionPrompt(question, context);
+      userMessage = this.buildReflectionPrompt(question, context, system_prompt);
     }
 
     messages.push({
@@ -116,8 +109,15 @@ export class ReflectionEngine {
     return messages;
   }
 
-  private buildReflectionPrompt(question: string, context?: string): string {
-    let prompt = `You are being asked to reflect on your own reasoning and analysis. `;
+  private buildReflectionPrompt(question: string, context?: string, system_prompt?: string): string {
+    let prompt = '';
+    
+    // Add system prompt at the beginning if provided
+    if (system_prompt) {
+      prompt += `${system_prompt}\n\n`;
+    }
+    
+    prompt += `You are being asked to reflect on your own reasoning and analysis. `;
     
     if (context) {
       prompt += `Given the following context:\n\n${context}\n\n`;
