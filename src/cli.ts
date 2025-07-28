@@ -52,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             max_tokens: {
               type: 'number',
               description: 'Maximum tokens for the response',
-              default: 500,
+              default: 1500,
             },
             temperature: {
               type: 'number',
