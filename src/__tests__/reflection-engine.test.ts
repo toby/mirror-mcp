@@ -132,4 +132,26 @@ describe('ReflectionEngine', () => {
     expect(result.reflection).toContain('instructions');
     expect(result.tokensUsed).toBeGreaterThan(0);
   });
+
+  test('should handle token limit errors gracefully', async () => {
+    // Mock server that throws a token limit error
+    const tokenLimitServer = {
+      async request() {
+        throw new Error('Could not parse response content as the length limit was reached');
+      }
+    };
+
+    const request = {
+      question: 'What are my strengths?',
+      max_tokens: 100, // Small limit to potentially trigger the issue
+    };
+
+    const result = await reflectionEngine.reflect(request, tokenLimitServer as any);
+
+    expect(result).toBeDefined();
+    expect(result.reflection).toContain('strengths');
+    expect(result.reflection).toContain('token limits');
+    expect(result.reflection).toContain('max_tokens');
+    expect(result.tokensUsed).toBeGreaterThan(0);
+  });
 });

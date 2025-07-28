@@ -22,7 +22,7 @@ export class ReflectionEngine {
       context = '',
       system_prompt,
       user_prompt,
-      max_tokens = 500,
+      max_tokens = 1500,
       temperature = 0.8,
     } = request;
 
@@ -68,7 +68,16 @@ export class ReflectionEngine {
         tokensUsed,
       };
     } catch (error) {
-      // Fallback to a structured self-reflection if sampling fails
+      // Check if the error is related to token limits being reached
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('length limit was reached') || errorMessage.includes('token limit')) {
+        console.error('Token limit reached during sampling, using fallback reflection with increased max_tokens recommendation');
+        const fallbackResult = this.generateFallbackReflection(question, context, system_prompt, user_prompt);
+        fallbackResult.reflection += '\n\n[Note: The original reflection was truncated due to token limits. Consider increasing max_tokens for longer responses.]';
+        return fallbackResult;
+      }
+      
+      // Fallback to a structured self-reflection if sampling fails for other reasons
       console.error('MCP sampling failed, using fallback reflection:', error);
       return this.generateFallbackReflection(question, context, system_prompt, user_prompt);
     }
@@ -129,7 +138,7 @@ export class ReflectionEngine {
     // Handle different possible response formats from MCP sampling
     if (response.content && Array.isArray(response.content)) {
       const textContent = response.content.find((item: any) => item.type === 'text');
-      if (textContent) {
+      if (textContent && textContent.text) {
         return textContent.text;
       }
     }
@@ -144,6 +153,17 @@ export class ReflectionEngine {
     
     if (typeof response === 'string') {
       return response;
+    }
+    
+    // Handle cases where response might be truncated or incomplete
+    if (response && typeof response === 'object') {
+      // Try to extract any text content from the response object
+      const possibleFields = ['text', 'content', 'response', 'output', 'result'];
+      for (const field of possibleFields) {
+        if (response[field] && typeof response[field] === 'string') {
+          return response[field];
+        }
+      }
     }
     
     throw new Error('Unable to extract reflection from sampling response');
