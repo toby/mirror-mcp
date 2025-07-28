@@ -21,14 +21,7 @@ A Model Context Protocol (MCP) server that provides a `reflect` tool, enabling L
 
 ### Quick Install for VS Code
 
-<div align="center">
-  <a href="#vs-code-setup">
-    <img src="https://img.shields.io/badge/Install%20for-VS%20Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Install for VS Code"/>
-  </a>
-  <a href="#vs-code-insiders-setup">
-    <img src="https://img.shields.io/badge/Install%20for-VS%20Code%20Insiders-1F9AC2?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="Install for VS Code Insiders"/>
-  </a>
-</div>
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_Server-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=mirror&config=%7B%22type%22%3A%20%22command%22%2C%22command%22%3A%20%22mirror-mcp%22%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_Server-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=mirror&config=%7B%22type%22%3A%20%22command%22%2C%22command%22%3A%20%22mirror-mcp%22%7D&quality=insiders)
 
 ### Via npm
 
